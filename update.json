@@ -1,0 +1,4 @@
+{"name":"raspberry","price":1300},
+{"name":"lemon","price":1350},
+{"name":"apple","price":1100},
+{"price":1800, "name":"banana"}
