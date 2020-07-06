@@ -2,4 +2,5 @@
 {"name":"lemon","price":350},
 {"name":"apple","price":100},
 {"name":"orange","price":150},
-{"name":"melon","price":180}
+{"name":"melon","price":180},
+{"price":800, "name":"banana"}

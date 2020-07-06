@@ -57,6 +57,20 @@ namespace mongodb
 		    collection.UpdateOne(filter,update);
 	    }
 
+	    else if (args[0] == "update_from_json")
+	    {
+	   	    string[] lines = System.IO.File.ReadAllLines(@"update.json"); 
+		    foreach (string line in lines)
+		    {
+		    	var doc = BsonSerializer.Deserialize<FruitEntity>(line);
+
+		        var filter = Builders<FruitEntity>.Filter.Eq(s => s.name, doc.name);
+		        var update = Builders<FruitEntity>.Update.Set(s => s.price, doc.price);
+
+		        collection.UpdateOne(filter,update);
+		    }
+	    }
+
 	    else if (args[0] == "import")
 	    {
 	   	    string[] lines = System.IO.File.ReadAllLines(@"import.json"); 
