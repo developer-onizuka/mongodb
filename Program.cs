@@ -10,6 +10,7 @@ namespace mongodb
 	public ObjectId  Id { get; set; }
         public string    name  { get; set; }
         public int       price { get; set; }
+        public int       stock { get; set; }
 
     }
     class Program
@@ -34,7 +35,7 @@ namespace mongodb
 	        var list = collection.Find(a=>true).ToList();
 	        foreach (var tmp in list)
                 {
-	            Console.WriteLine(tmp.Id + "," + tmp.name + "," + tmp.price);
+	            Console.WriteLine(tmp.Id + "," + tmp.name + "," + tmp.price + "," + tmp.stock);
 	        }
 	    }
 
@@ -65,8 +66,8 @@ namespace mongodb
 		    	var doc = BsonSerializer.Deserialize<FruitEntity>(line);
 
 		        var filter = Builders<FruitEntity>.Filter.Eq(s => s.name, doc.name);
-		        var update = Builders<FruitEntity>.Update.Set(s => s.price, doc.price);
-
+		        var update = Builders<FruitEntity>.Update.Set(s => s.price, doc.price)
+			                                         .Set(s => s.stock, doc.stock);
 		        collection.UpdateOne(filter,update);
 		    }
 	    }
