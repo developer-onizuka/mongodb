@@ -11,7 +11,13 @@ namespace mongodb
         public string    name  { get; set; }
         public int       price { get; set; }
         public int       stock { get; set; }
+        public string    last_update  { get; set; }
 
+    }
+    public class Today
+    {
+	public string s1 = "test";
+        public DateTime dt = DateTime.Now;
     }
     class Program
     {
@@ -29,14 +35,21 @@ namespace mongodb
 	    IMongoDatabase db = client.GetDatabase("mydb");
 	    IMongoCollection<FruitEntity> collection = db.GetCollection<FruitEntity>("Fruit");
 
+	    Today day = new Today();
+            string now = day.dt.ToString();
+
 	    if (args[0] == "query")
     	    {
 	      	// lambda-shiki de true wo mitasu recode wo list ni ireru (tumari zenbu).
 	        var list = collection.Find(a=>true).ToList();
 	        foreach (var tmp in list)
                 {
-	            Console.WriteLine(tmp.Id + "," + tmp.name + "," + tmp.price + "," + tmp.stock);
+	            Console.WriteLine(tmp.Id + "," + tmp.name + "," + tmp.price + "," + tmp.stock + "," + tmp.last_update);
 	        }
+	    }
+	    else if (args[0] == "date")
+	    {
+            		Console.WriteLine(day.dt);
 	    }
 
 	    else if (args[0] == "create")
@@ -52,22 +65,20 @@ namespace mongodb
 	    
 	    else if (args[0] == "update")
 	    {
-		    var filter = Builders<FruitEntity>.Filter.Eq("name","apple");
-		    var update = Builders<FruitEntity>.Update.Set("price",200);
+		    //var filter = Builders<FruitEntity>.Filter.Eq("name","apple");
+		    //var update = Builders<FruitEntity>.Update.Set("price",200);
 
-		    collection.UpdateOne(filter,update);
-	    }
-
-	    else if (args[0] == "update_from_json")
-	    {
-	   	    string[] lines = System.IO.File.ReadAllLines(@"update.json"); 
+		    //collection.UpdateOne(filter,update);
+	   	    
+		    string[] lines = System.IO.File.ReadAllLines(@"update.json"); 
 		    foreach (string line in lines)
 		    {
 		    	var doc = BsonSerializer.Deserialize<FruitEntity>(line);
 
 		        var filter = Builders<FruitEntity>.Filter.Eq(s => s.name, doc.name);
 		        var update = Builders<FruitEntity>.Update.Set(s => s.price, doc.price)
-			                                         .Set(s => s.stock, doc.stock);
+			                                         .Set(s => s.stock, doc.stock)
+			                                         .Set(s => s.last_update, now);
 		        collection.UpdateOne(filter,update);
 		    }
 	    }
@@ -79,7 +90,9 @@ namespace mongodb
 		    foreach (string line in lines)
 		    {
 		    	var doc = BsonSerializer.Deserialize<FruitEntity>(line);
+			doc.last_update = now;
 		    	collection.InsertOne(doc);
+		    	Console.WriteLine(doc.Id);
 		    }
 	    }
 
