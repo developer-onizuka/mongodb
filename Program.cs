@@ -11,7 +11,7 @@ namespace mongodb
         public string    name  { get; set; }
         public int       price { get; set; }
         public int       stock { get; set; }
-        public string    last_update  { get; set; }
+        public DateTime  last_update  { get; set; }
 
     }
     public class Today
@@ -36,7 +36,8 @@ namespace mongodb
 	    IMongoCollection<FruitEntity> collection = db.GetCollection<FruitEntity>("Fruit");
 
 	    Today day = new Today();
-            string now = day.dt.ToString();
+            //string now = day.dt.ToString();
+	    DateTime now = day.dt;
 
 	    if (args[0] == "query")
     	    {
@@ -47,9 +48,33 @@ namespace mongodb
 	            Console.WriteLine(tmp.Id + "," + tmp.name + "," + tmp.price + "," + tmp.stock + "," + tmp.last_update);
 	        }
 	    }
+
+
+	    else if (args[0] == "query24")
+    	    {
+		double x = double.Parse(args[1]);
+		DateTime time = now.AddHours(x);
+
+	        var list = collection.Find(a=>true).ToList();
+	        foreach (var tmp in list)
+                {
+		    if (tmp.last_update > time)
+		    { 
+	            	Console.WriteLine(tmp.Id + "," + tmp.name + "," + tmp.price + "," + tmp.stock + "," + tmp.last_update);
+		    }
+		}
+	    }
+
+
 	    else if (args[0] == "date")
 	    {
-            		Console.WriteLine(day.dt);
+            	Console.WriteLine(now);
+		DateTime time = now.AddHours(-24);
+            	Console.WriteLine(time);
+		if (time < now)
+		{
+			Console.WriteLine("True");
+		}
 	    }
 
 	    else if (args[0] == "create")
