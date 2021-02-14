@@ -14,11 +14,12 @@ namespace mongodb
         public DateTime  last_update  { get; set; }
 
     }
+
     public class Today
     {
-	public string s1 = "test";
         public DateTime dt = DateTime.Now;
     }
+
     class Program
     {
         static void Main(string[] args)
@@ -38,6 +39,7 @@ namespace mongodb
 	    Today day = new Today();
             //string now = day.dt.ToString();
 	    DateTime now = day.dt;
+	    now = TimeZoneInfo.ConvertTimeToUtc(now);
 
 	    if (args[0] == "query")
     	    {
@@ -49,11 +51,23 @@ namespace mongodb
 	        }
 	    }
 
+	    else if (args[0] == "queryid")
+    	    {
+		string id = args[1];
+		// converts the string id into an ObjectId. id wo ObjectId de oId ni henkann shinaito Find dekinai.
+		ObjectId oId = new ObjectId(id);
+	        var list = collection.Find(a => a.Id == oId).ToList();
+	        foreach (var tmp in list)
+                {
+	            Console.WriteLine(tmp.Id + "," + tmp.name + "," + tmp.price + "," + tmp.stock + "," + tmp.last_update);
+	        }
+	    }
 
 	    else if (args[0] == "query24")
     	    {
-		double x = double.Parse(args[1]);
-		DateTime time = now.AddHours(x);
+		//double x = double.Parse(args[1]);
+		//DateTime time = now.AddHours(x);
+		DateTime time = now.AddHours(double.Parse(args[1]));
 
 	        var list = collection.Find(a=>true).ToList();
 	        foreach (var tmp in list)
@@ -64,7 +78,6 @@ namespace mongodb
 		    }
 		}
 	    }
-
 
 	    else if (args[0] == "date")
 	    {
@@ -100,10 +113,15 @@ namespace mongodb
 		    {
 		    	var doc = BsonSerializer.Deserialize<FruitEntity>(line);
 
-		        var filter = Builders<FruitEntity>.Filter.Eq(s => s.name, doc.name);
-		        var update = Builders<FruitEntity>.Update.Set(s => s.price, doc.price)
-			                                         .Set(s => s.stock, doc.stock)
-			                                         .Set(s => s.last_update, now);
+		    //Filter de doc.name to onaji s.name wo filter ni ireru. 
+		        //var filter = Builders<FruitEntity>.Filter.Eq(s => s.name, doc.name);
+		        //var update = Builders<FruitEntity>.Update.Set(s => s.price, doc.price)
+			//                                         .Set(s => s.stock, doc.stock)
+			//                                         .Set(s => s.last_update, now);
+		        var filter = Builders<FruitEntity>.Filter.Eq("name", doc.name);
+		        var update = Builders<FruitEntity>.Update.Set("price", doc.price)
+			                                         .Set("stock", doc.stock)
+			                                         .Set("last_update", now);
 		        collection.UpdateOne(filter,update);
 		    }
 	    }
@@ -119,6 +137,11 @@ namespace mongodb
 		    	collection.InsertOne(doc);
 		    	Console.WriteLine(doc.Id);
 		    }
+	    }
+
+	    else if (args[0] == "dedup")
+	    {
+		    // test
 	    }
 
 	    else if (args[0] == "delete")
