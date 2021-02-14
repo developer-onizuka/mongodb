@@ -1,3 +1,0 @@
-    dotnet new console -o mongodb
-    cd mongodb/
-    dotnet add package MongoDB.Driver --version 2.10.0
