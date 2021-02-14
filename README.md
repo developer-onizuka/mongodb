@@ -132,3 +132,4 @@
    { "_id" : ObjectId("6028986720628c1790944904"), "name" : "melon", "price" : 190, "stock" : 0, "last_update" : ISODate("2021-02-14T03:31:28.944Z") }
    { "_id" : ObjectId("6028986720628c1790944905"), "name" : "banana", "price" : 810, "stock" : 1, "last_update" : ISODate("2021-02-14T03:31:28.944Z") }
    ```
+
