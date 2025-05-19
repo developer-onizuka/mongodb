@@ -19,7 +19,7 @@
    centos              latest              0d120b6ccaa8        6 months ago        215MB
    zookeeper           latest              6ad6cb039dfa        6 months ago        252MB
    mongo               latest              aa22d67221a0        6 months ago        493MB
-   $ sudo docker run -itd -p 27017:27017 --name="mongodb" mongo:latest
+   $ sudo docker run -d -p 27017:27017 --name="mongodb" mongo:latest
    $ sudo docker ps -a
    CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                      NAMES
    e0951416f159        mongo:latest        "docker-entrypoint.s…"   31 minutes ago      Up 31 minutes       0.0.0.0:27017->27017/tcp   mongodb
